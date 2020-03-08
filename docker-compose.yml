@@ -32,6 +32,7 @@ services:
     volumes:
       - ./src/:/var/www
       - ./m2dd/conf.d/:/etc/nginx/conf.d/
+      - ./m2dd/ssl/:/etc/ssl/
     networks:
       - app-network
 
