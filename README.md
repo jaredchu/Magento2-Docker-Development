@@ -8,6 +8,11 @@ Simple, fast and easy way to develop Magento 2 on localhost
 - Easy to modify PHP, MySQL and Nginx configurations.
 - Works on Linux, MacOS and Windows.
 
+## Environment
+* php:7.2-fpm
+* mysql:5.7.22
+* nginx:alpine
+
 ## Prerequisities
 **Linux:**
 Install [Docker](https://docs.docker.com/engine/installation/linux/docker-ce/ubuntu/) and [Docker-compose](https://docs.docker.com/compose/install/#install-compose).
@@ -108,11 +113,6 @@ SERVICE_NAME: mysql
 * `m2dd/conf.d/` - Contains nginx configuration files.
 * `/m2dd/ssl/` - Contains SSL certs.
 
-## Docker images in use
-* php:7.2-fpm
-* mysql:5.7.22
-* nginx:alpine
-
 ## Contributing
 
 Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to us.
@@ -124,7 +124,7 @@ This project is using [SemVer](http://semver.org/) for versioning. For the versi
 
 ## Authors
 
-* **Jared Chu** - *Initial work* - [CV](https://cv.jaredchu.com/)
+* **Jared Chu** - *Initial work* - [Resume](https://cv.jaredchu.com/)
 
 See also the list of [contributors](https://github.com/jaredchu/Magento2-Docker-Development/contributors) who 
 participated in this project.
