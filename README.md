@@ -21,19 +21,19 @@ Install [Docker](https://docs.docker.com/docker-for-windows/install/) and [Docke
 ## Getting Started
 
 ##### 1. Clone the project:
-```bash
+```
 git clone git@github.com:jaredchu/Magento2-Docker-Development.git [project_name]
 cd [project_name]
 rm -rf .git
 ```
 ##### 2. Copy your project's code into `src` folder.
 ##### 3. Run the containers:
-```bash
+```
 docker-compose up -d
 ```
-You can now **jump to [step 9](#9-visit-local_domain_name-on-browser) to start Magento 2 installation** if it's a new project.
+If this is a new project then you can now **jump to [step 9](#9-visit-local_domain_name-on-browser) to start Magento 2 installation**.
 ##### 4. Import database:
-```bash
+```
 docker exec -i db mysql -uroot -ppassword magento2 < database.sql
 ```
 ##### 5. Modify `app/etc/env.php` database username/password with:
@@ -43,7 +43,7 @@ magento2/magento2 (having resource limit issue, will be fix in the next release)
 ```
 ##### 6. Add your [local_domain_name] (magento2.local for example) into `hosts` file.
 ##### 7. Set [local_domain_name] for your local site:
-```bash
+```
 docker exec -i app bin/magento config:set web/unsecure/base_url [local_domain_name]
 docker exec -i app bin/magento config:set web/unsecure/base_link_url [local_domain_name]
 docker exec -i app bin/magento config:set web/secure/base_url [local_domain_name]
@@ -52,15 +52,15 @@ docker exec -i app bin/magento config:set web/secure/base_link_url [local_domain
 ##### 8. Install dependencies (if needed):
 
 Enter the `app` container to run any command without `docker exec -i app` prefix.
-```bash
+```
 docker exec -it app bash
 ```
 Run the installation:
-```bash
+```
 composer install
 ```
 Check magento command is working or not:
-```bash
+```
 bin/magento --help
 ```
 ##### 9. Visit [local_domain_name] on browser.
@@ -68,24 +68,24 @@ bin/magento --help
 ## Usage
 
 #### Stop containers:
-```bash
+```
 docker-compose stop
 ```
-### Start containers with system-startup:
+#### Start containers with system-startup:
 Modify `docker-compose.yml`, replace `on-failure` with `always`.
 
 #### Run bin/magento commands:
-```bash
+```
 docker exec -i app bin/composer [parameters]
 ```
 or
-```bash
+```
 docker exec -it app bash
 bin/composer [parameters]
 ```
 
 #### Applies the changes after modify PHP/MySQL/Nginx config:
-```bash
+```
 docker-compose down
 docker-compose up -d
 ```
@@ -106,7 +106,7 @@ SERVICE_NAME: mysql
 * `m2dd/local.ini` - PHP configuration file.
 * `m2dd/my.cnf` - MySQL configuration file.
 * `m2dd/conf.d/` - Contains nginx configuration files.
-* /m2dd/ssl/ - Contains SSL certs.
+* `/m2dd/ssl/` - Contains SSL certs.
 
 ## Docker images in use
 * php:7.2-fpm
