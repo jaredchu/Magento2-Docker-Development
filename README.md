@@ -3,10 +3,10 @@ Simple, fast and easy way to develop Magento 2 on localhost
 
 ## Why
 - Running Magento 2 project really fast on your machine.
-- Just a few steps to stup.
+- Just a few steps to setup.
 - No extra step to deploy code from host to container.
-- Easy to modify PHP, MySQL and Nginx configurations.
-- Works on Linux, MacOS and Windows.
+- Easy to modify PHP, MySQL, and Nginx configurations.
+- Works on Linux, macOS, and Windows.
 
 ## Environment
 * php:7.2-fpm
@@ -72,14 +72,14 @@ bin/magento --help
 
 ## Usage
 
-#### Stop containers:
+##### Stop containers:
 ```
 docker-compose stop
 ```
-#### Start containers with system-startup:
+##### Start containers with system-startup:
 Modify `docker-compose.yml`, replace `on-failure` with `always`.
 
-#### Run bin/magento commands:
+##### Run bin/magento commands:
 ```
 docker exec -i app bin/composer [parameters]
 ```
@@ -89,29 +89,27 @@ docker exec -it app bash
 bin/composer [parameters]
 ```
 
-#### Applies the changes after modify PHP/MySQL/Nginx config:
+##### Applies the changes after modify PHP/MySQL/Nginx config:
 ```
 docker-compose down
 docker-compose up -d
 ```
 
-#### Environment Variables
+##### Environment Variables
 ```yaml
 MYSQL_ROOT_PASSWORD: password
 MYSQL_DATABASE: magento2
 MYSQL_USER: magento2
 MYSQL_PASSWORD: magento2
-SERVICE_TAGS: dev
-SERVICE_NAME: mysql
 ```
 
-#### Useful File Locations
+##### Useful File Locations
 
 * `src` - your project root directory that contains `composer.json`.
 * `m2dd/local.ini` - PHP configuration file.
 * `m2dd/my.cnf` - MySQL configuration file.
 * `m2dd/conf.d/` - Contains nginx configuration files.
-* `/m2dd/ssl/` - Contains SSL certs.
+* `m2dd/ssl/` - Contains SSL certs.
 
 ## Contributing
 
