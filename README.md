@@ -28,8 +28,6 @@ Install [Docker](https://docs.docker.com/docker-for-windows/install/) and [Docke
 ##### 1. Clone the project:
 ```
 git clone git@github.com:jaredchu/Magento2-Docker-Development.git [project_name]
-cd [project_name]
-rm -rf .git
 ```
 ##### 2. Copy your project's code into `src` folder.
 ##### 3. Run the containers:
@@ -49,10 +47,10 @@ magento2/magento2 (having resource limit issue, will be fix in the next release)
 ##### 6. Add your [local_domain_name] (magento2.local for example) into `hosts` file.
 ##### 7. Set [local_domain_name] for your local site:
 ```
-docker exec -i app bin/magento config:set web/unsecure/base_url [local_domain_name]
-docker exec -i app bin/magento config:set web/unsecure/base_link_url [local_domain_name]
-docker exec -i app bin/magento config:set web/secure/base_url [local_domain_name]
-docker exec -i app bin/magento config:set web/secure/base_link_url [local_domain_name]
+docker exec -i app bin/magento config:set web/unsecure/base_url http://[local_domain_name]/
+docker exec -i app bin/magento config:set web/unsecure/base_link_url http://[local_domain_name]/
+docker exec -i app bin/magento config:set web/secure/base_url https://[local_domain_name]/
+docker exec -i app bin/magento config:set web/secure/base_link_url https://[local_domain_name]/
 ```
 ##### 8. Install dependencies (if needed):
 
