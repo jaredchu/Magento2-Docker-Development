@@ -7,7 +7,7 @@ services:
       context: .
       dockerfile: Dockerfile
     image: m2dd/php
-    container_name: app
+    container_name: ${APP_NAME}
     restart: on-failure
     tty: true
     environment:
@@ -23,7 +23,7 @@ services:
   #Nginx Service
   webserver:
     image: nginx:alpine
-    container_name: webserver
+    container_name: "${APP_NAME}_webserver"
     restart: on-failure
     tty: true
     ports:
@@ -39,7 +39,7 @@ services:
   #MySQL Service
   db:
     image: mysql:5.7.22
-    container_name: db
+    container_name: "${APP_NAME}_db"
     restart: on-failure
     tty: true
     ports:
@@ -54,6 +54,22 @@ services:
     volumes:
       - dbdata:/var/lib/mysql/
       - ./m2dd/my.cnf:/etc/mysql/my.cnf
+    networks:
+      - app-network
+
+  #PHPMyAdmin Container
+  phpmyadmin:
+    depends_on:
+      - db
+    image: phpmyadmin/phpmyadmin
+    container_name: "${APP_NAME}_phpmyadmin"
+    ports:
+      - 8080:80
+    environment:
+      PMA_HOST: db
+      MYSQL_ROOT_PASSWORD: password
+    volumes:
+      - ./m2dd/local.ini:/usr/local/etc/php/conf.d/php-phpmyadmin.ini
     networks:
       - app-network
 
