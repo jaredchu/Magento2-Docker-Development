@@ -41,7 +41,7 @@ services:
 
   #MySQL Service
   db:
-    image: mysql:${MYSQL_IMAGE}
+    image: ${MYSQL_IMAGE}
     container_name: "${APP_NAME}_db"
     restart: ${RESTART_CONDITION}
     tty: true
