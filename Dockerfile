@@ -1,4 +1,10 @@
-FROM php:7.2-fpm
+ARG PHPFPM_IMAGE
+
+FROM $PHPFPM_IMAGE
+
+# ARG for USER_ID needs to be here because of build scope
+# ref https://docs.docker.com/compose/compose-file/ -> Scope of build-args
+ARG USER_ID
 
 # Set working directory
 WORKDIR /var/www
@@ -32,20 +38,23 @@ RUN pecl install libsodium
 RUN apt-get install -y zlib1g-dev libicu-dev g++
 RUN docker-php-ext-configure intl
 
-# Install PHP extensions
-RUN docker-php-ext-install pdo_mysql mbstring zip exif pcntl sodium bcmath intl soap xsl sockets
+# Prepare for install gd
 RUN docker-php-ext-configure gd --with-gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ --with-png-dir=/usr/include/
-RUN docker-php-ext-install gd
+
+# Install PHP extensions
+RUN docker-php-ext-install pdo_mysql mbstring zip exif pcntl sodium bcmath intl soap xsl sockets gd
 
 # Install composer
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+RUN php composer-setup.php --install-dir=/usr/local/bin --filename=composer
+RUN php -r "unlink('composer-setup.php');"
 
 # Clear cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Add user for laravel application
-RUN groupadd -g 1000 www
-RUN useradd -u 1000 -ms /bin/bash -g www www
+# Add user to fix permission issue
+RUN groupadd -g $USER_ID www
+RUN useradd -u $USER_ID -ms /bin/bash -g www www
 RUN chown -R www:www /var/www
 
 # Change current user to www
