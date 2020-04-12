@@ -8,12 +8,14 @@ Simple, fast and easy way to develop Magento 2 on localhost
 - Easy to modify PHP, MySQL, and Nginx configurations.
 - Works on Linux, macOS, and Windows.
 
-## Environment
+## Default Official Images
 * php:7.2-fpm
-* mysql:5.7.22
+* mysql:5.7
 * nginx:alpine
 
 ## Prerequisities
+**All OS**: Install [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
+
 **Linux:**
 Install [Docker](https://docs.docker.com/engine/installation/linux/docker-ce/ubuntu/) and [Docker-compose](https://docs.docker.com/compose/install/#install-compose).
 
@@ -34,25 +36,17 @@ git clone git@github.com:jaredchu/Magento2-Docker-Development.git [project_name]
 ```
 docker-compose up -d
 ```
-If this is a new project then you can now **jump to [step 9](#9-visit-local_domain_name-on-browser) to start Magento 2 installation**.
+If it's a new project then you can now **jump to [step 9](#9-visit-local_domain_name-on-browser) to start Magento 2 installation**.
 ##### 4. Import database:
 ```
 docker exec -i db mysql -uroot -ppassword magento2 < database.sql
 ```
-##### 5. Modify `app/etc/env.php` database username/password with:
+##### 5. Replace username/password in `app/etc/env.php` with:
 ```
 root/password (recommended)
 magento2/magento2 (having resource limit issue, will be fix in the next release)
 ```
-##### 6. Add your [local_domain_name] (magento2.local for example) into `hosts` file.
-##### 7. Set [local_domain_name] for your local site:
-```
-docker exec -i app bin/magento config:set web/unsecure/base_url http://[local_domain_name]/
-docker exec -i app bin/magento config:set web/unsecure/base_link_url http://[local_domain_name]/
-docker exec -i app bin/magento config:set web/secure/base_url https://[local_domain_name]/
-docker exec -i app bin/magento config:set web/secure/base_link_url https://[local_domain_name]/
-```
-##### 8. Install dependencies (if needed):
+##### 6. Install dependencies (if needed):
 
 Enter the `app` container to run any command without `docker exec -i app` prefix.
 ```
@@ -66,7 +60,19 @@ Check magento command is working or not:
 ```
 bin/magento --help
 ```
-##### 9. Visit [local_domain_name] on browser.
+##### 7. Add your [local_domain_name] (magento2.local for example) into `hosts` file.
+```
+127.0.0.1	magento2.local
+::1             magento2.local
+```
+##### 8. Set [local_domain_name] for your local site:
+```
+docker exec -i app bin/magento config:set web/unsecure/base_url http://[local_domain_name]/
+docker exec -i app bin/magento config:set web/unsecure/base_link_url http://[local_domain_name]/
+docker exec -i app bin/magento config:set web/secure/base_url https://[local_domain_name]/
+docker exec -i app bin/magento config:set web/secure/base_link_url https://[local_domain_name]/
+```
+##### 9. All done! You can now visit your [local_domain_name] or http://localhost on browser.
 
 ## Usage
 
@@ -75,7 +81,7 @@ bin/magento --help
 docker-compose stop
 ```
 ##### Start containers with system-startup:
-Modify `docker-compose.yml`, replace `on-failure` with `always`.
+Modify `.env`, replace `RESTART_CONDITION=no` with `RESTART_CONDITION=always`.
 
 ##### Run bin/magento commands:
 ```
@@ -94,11 +100,38 @@ docker-compose up -d
 ```
 
 ##### Environment Variables
-```yaml
-MYSQL_ROOT_PASSWORD: password
-MYSQL_DATABASE: magento2
-MYSQL_USER: magento2
-MYSQL_PASSWORD: magento2
+All the common variables are in `.env`:
+```dotenv
+# default: app
+APP_NAME=app
+
+# ref https://hub.docker.com/_/mysql?tab=tags
+MYSQL_IMAGE=mysql:5.7
+# ref https://hub.docker.com/_/php?tab=tags
+PHPFPM_IMAGE=php:7.2-fpm
+
+# match the container's user with your current user to prevent permission issue
+# run this command to know your UID: echo $UID
+# default: 1000
+USER_ID=1000
+
+# no, on-failure, always or unless-stopped
+# ref https://docs.docker.com/config/containers/start-containers-automatically/
+RESTART_CONDITION=no
+
+# working directory
+# default: ./src
+WORKING_DIR=./src
+
+MYSQL_ROOT_PASSWORD=password
+MYSQL_DATABASE=magento2
+MYSQL_USER=magento2
+MYSQL_PASSWORD=magento2
+
+HTTP_PORT=80
+HTTPS_PORT=443
+MYSQL_PORT=3306
+PHPMYADMIN_PORT=8080
 ```
 
 ##### Useful File Locations
