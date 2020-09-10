@@ -25,7 +25,10 @@ RUN apt-get install -y \
     vim \
     unzip \
     git \
-    curl
+    curl \
+    nano \
+    sudo \
+    cron
 
 # Prepare for install xls
 RUN apt-get install -y libxml2-dev libxslt-dev
@@ -42,7 +45,7 @@ RUN docker-php-ext-configure intl
 RUN docker-php-ext-configure gd --with-gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ --with-png-dir=/usr/include/
 
 # Install PHP extensions
-RUN docker-php-ext-install pdo_mysql mbstring zip exif pcntl sodium bcmath intl soap xsl sockets gd
+RUN docker-php-ext-install pdo_mysql mbstring zip exif pcntl sodium bcmath intl soap xsl sockets gd mysqli
 
 # Install composer
 RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
@@ -56,6 +59,14 @@ RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 RUN groupadd -g $USER_ID www
 RUN useradd -u $USER_ID -ms /bin/bash -g www www
 RUN chown -R www:www /var/www
+
+# Create composer folder
+RUN mkdir /home/www/.composer
+RUN chown -R www:www /home/www/.composer
+
+# Add www user to sudoers and make it can run without password prompt
+RUN usermod -aG sudo www
+RUN echo "www ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
 # Change current user to www
 USER www

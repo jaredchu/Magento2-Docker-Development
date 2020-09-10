@@ -1,6 +1,5 @@
 # Magento2 Docker Development
-Simple, fast and easy way to develop Magento 2 on localhost
-
+Simple, fast and easy way to run and develop Magento 2 on localhost.
 ## Why
 - Running Magento 2 project really fast on your machine.
 - Just a few steps to setup.
@@ -11,7 +10,7 @@ Simple, fast and easy way to develop Magento 2 on localhost
 ## Default Official Images
 * php:7.2-fpm
 * mysql:5.7
-* nginx:alpine
+* nginx:1.19
 
 ## Prerequisities
 **All OS**: Install [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
@@ -25,34 +24,62 @@ Install [Docker](https://docs.docker.com/docker-for-mac/install/) and [Docker-co
 **Windows:**
 Install [Docker](https://docs.docker.com/docker-for-windows/install/) and [Docker-compose](https://docs.docker.com/compose/install/#install-compose).
 
-## Getting Started
+## Quick Start (new project)
+##### 1. Clone the project:
+```
+git clone git@github.com:jaredchu/Magento2-Docker-Development.git [project_name]
+cd [project_name]
+```
+##### 2. Update `m2dd/auth.json` and fill its data with your credentials.
+- [How to get Magento authentication keys](https://devdocs.magento.com/guides/v2.4/install-gde/prereq/connect-auth.html)
+- [How to get Github personal access token](https://help.github.com/articles/creating-a-personal-access-token-for-the-command-line/)
+##### 3. Run container & Get latest Magento 2 source code
+```
+docker-compose up -d
+docker exec -it app bash -c "rm .gitkeep && composer create-project --repository-url=https://repo.magento.com/ magento/project-community-edition:2.3 . --prefer-dist --no-interaction --dev"
+```
+You can now start to install your new Magento 2 site via [Web Setup Wizard](https://docs.magento.com/user-guide/v2.3/system/web-setup-wizard.html) (will be removed in Magento 2.4) or [Command Line](https://devdocs.magento.com/guides/v2.3/install-gde/install/cli/install-cli.html) (recommended).
+
+## Existing Project
 
 ##### 1. Clone the project:
 ```
 git clone git@github.com:jaredchu/Magento2-Docker-Development.git [project_name]
+cd [project_name]
 ```
-##### 2. Copy your project's code into `src` folder.
-##### 3. Run the containers:
+##### 2. Run the containers:
 ```
 docker-compose up -d
 ```
-If it's a new project then you can now **jump to [step 9](#9-visit-local_domain_name-on-browser) to start Magento 2 installation**.
+##### 3. Copy your magento 2 source code into `src` folder.
 ##### 4. Import database:
 ```
-docker exec -i db mysql -uroot -ppassword magento2 < database.sql
+docker exec -i db mysql -uroot -ppassword magento2 < your-database.sql
 ```
-##### 5. Replace username/password in `app/etc/env.php` with:
+##### 5. Modify the DB cofiguration in `app/etc/env.php`:
 ```
-root/password (recommended)
-magento2/magento2 (having resource limit issue, will be fix in the next release)
+'db' => [
+    'table_prefix' => '',
+    'connection' => [
+        'default' => [
+            'host' => 'db',
+            'dbname' => 'm2db',
+            'username' => 'm2user',
+            'password' => 'm2pw',
+            'active' => '1',
+            'driver_options' => [
+            ]
+        ]
+    ]
+],
 ```
-##### 6. Install dependencies (if needed):
+##### 6. Install dependencies:
 
-Enter the `app` container to run any command without `docker exec -i app` prefix.
+Enter the `app` container TTY (to run any command without `docker exec -i app` prefix).
 ```
 docker exec -it app bash
 ```
-Run the installation:
+Run the composer installation:
 ```
 composer install
 ```
@@ -67,18 +94,19 @@ bin/magento --help
 ```
 ##### 8. Set [local_domain_name] for your local site:
 ```
-docker exec -i app bin/magento config:set web/unsecure/base_url http://[local_domain_name]/
-docker exec -i app bin/magento config:set web/unsecure/base_link_url http://[local_domain_name]/
-docker exec -i app bin/magento config:set web/secure/base_url https://[local_domain_name]/
-docker exec -i app bin/magento config:set web/secure/base_link_url https://[local_domain_name]/
+docker exec -i app bin/magento config:set web/unsecure/base_url http://magento2.local/
+docker exec -i app bin/magento config:set web/unsecure/base_link_url http://magento2.local/
+docker exec -i app bin/magento config:set web/secure/base_url https://magento2.local/
+docker exec -i app bin/magento config:set web/secure/base_link_url https://magento2.local/
 ```
-##### 9. All done! You can now visit your [local_domain_name] or http://localhost on browser.
+##### 9. All done! Visit your [local_domain_name] (http://magento2.local for example) on your browser.
 
 ## Usage
 
-##### Stop containers:
+##### Restart containers (required when you want to apply the changes after modify `.env` or `docker-composer.yml`):
 ```
-docker-compose stop
+docker-compose down
+docker-compose up -d
 ```
 ##### Start containers with system-startup:
 Modify `.env`, replace `RESTART_CONDITION=no` with `RESTART_CONDITION=always`.
@@ -93,67 +121,32 @@ docker exec -it app bash
 bin/composer [parameters]
 ```
 
-##### Applies the changes after modify PHP/MySQL/Nginx config:
-```
-docker-compose down
-docker-compose up -d
-```
-
 ##### Environment Variables
-All the common variables are in `.env`:
-```dotenv
-# default: app
-APP_NAME=app
-
-# ref https://hub.docker.com/_/mysql?tab=tags
-MYSQL_IMAGE=mysql:5.7
-# ref https://hub.docker.com/_/php?tab=tags
-PHPFPM_IMAGE=php:7.2-fpm
-
-# match the container's user with your current user to prevent permission issue
-# run this command to know your UID: echo $UID
-# default: 1000
-USER_ID=1000
-
-# no, on-failure, always or unless-stopped
-# ref https://docs.docker.com/config/containers/start-containers-automatically/
-RESTART_CONDITION=no
-
-# working directory
-# default: ./src
-WORKING_DIR=./src
-
-MYSQL_ROOT_PASSWORD=password
-MYSQL_DATABASE=magento2
-MYSQL_USER=magento2
-MYSQL_PASSWORD=magento2
-
-HTTP_PORT=80
-HTTPS_PORT=443
-MYSQL_PORT=3306
-PHPMYADMIN_PORT=8080
-```
+All the common variables are in `.env`.
 
 ##### Useful File Locations
 
-* `src` - your project root directory that contains `composer.json`.
+* `src` - your project root directory that contains `composer.json` and `app` folder.
 * `m2dd/local.ini` - PHP configuration file.
 * `m2dd/my.cnf` - MySQL configuration file.
+* `m2dd/auth.json` - Composer basic auth file.
 * `m2dd/conf.d/` - Contains nginx configuration files.
 * `m2dd/ssl/` - Contains SSL certs.
+* `m2dd/crontabs/root` - Crontab for root user.
+* `m2dd/crontabs/www` - Crontab for www user.
 
 ## Contributing
 
-Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to us.
+Feel free for submitting pull requests to this project.
 
 ## Versioning
 
 This project is using [SemVer](http://semver.org/) for versioning. For the versions available, see the 
-[tags on this repository](https://github.com/your/repository/tags). 
+[tags on this repository](https://github.com/jaredchu/Magento2-Docker-Development/tags). 
 
 ## Authors
 
-* **Jared Chu** - *Initial work* - [Resume](https://cv.jaredchu.com/)
+* **Jared Chu** - *Initial work* - [About Jared](https://cv.jaredchu.com/)
 
 See also the list of [contributors](https://github.com/jaredchu/Magento2-Docker-Development/contributors) who 
 participated in this project.

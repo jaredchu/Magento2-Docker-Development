@@ -1,0 +1,9 @@
+# Crontab for www user
+
+SHELL=/bin/bash
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
+# Magento 2 jobs
+* * * * * php /var/www/bin/magento cron:run | grep -v "Ran jobs by schedule" >> /var/www/var/log/magento.cron.log
+* * * * * php /var/www/update/cron.php >> /var/www/var/log/update.cron.log
+* * * * * php /var/www/bin/magento setup:cron:run >> /var/www/var/log/setup.cron.log
