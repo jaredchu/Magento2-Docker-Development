@@ -1,5 +1,4 @@
-# Magento2 Docker Development
-Simple, fast and easy way to run and develop Magento 2 on localhost.
+![Magento2 Docker Development](https://i.imgur.com/tm852O1.jpg)
 ## Why
 - Running Magento 2 project really fast on your machine.
 - Just a few steps to setup.
