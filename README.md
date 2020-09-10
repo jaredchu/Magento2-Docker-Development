@@ -37,6 +37,11 @@ cd [project_name]
 docker-compose up -d
 docker exec -it app bash -c "rm .gitkeep && composer create-project --repository-url=https://repo.magento.com/ magento/project-community-edition:2.3 . --prefer-dist --no-interaction --dev"
 ```
+##### 4. Restart containers
+```
+docker-compose down
+docker-compose up -d
+```
 You can now start to install your new Magento 2 site via [Web Setup Wizard](https://docs.magento.com/user-guide/v2.3/system/web-setup-wizard.html) (will be removed in Magento 2.4) or [Command Line](https://devdocs.magento.com/guides/v2.3/install-gde/install/cli/install-cli.html) (recommended).
 
 ## Existing Project
@@ -46,11 +51,11 @@ You can now start to install your new Magento 2 site via [Web Setup Wizard](http
 git clone git@github.com:jaredchu/Magento2-Docker-Development.git [project_name]
 cd [project_name]
 ```
-##### 2. Run the containers:
+##### 2. Copy your magento 2 source code into `src` folder.
+##### 3. Run the containers:
 ```
 docker-compose up -d
 ```
-##### 3. Copy your magento 2 source code into `src` folder.
 ##### 4. Import database:
 ```
 docker exec -i db mysql -uroot -ppassword magento2 < your-database.sql
