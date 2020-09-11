@@ -31,7 +31,7 @@ Install [Docker](https://docs.docker.com/docker-for-windows/install/) and [Docke
 ## Quick Start (new project)
 ##### 1. Clone the project:
 ```
-git clone git@github.com:jaredchu/Magento2-Docker-Development.git [project_name]
+git clone https://github.com/jaredchu/Magento2-Docker-Development.git [project_name]
 cd [project_name]
 ```
 ##### 2. Update `m2dd/auth.json` and fill its data with your credentials.
@@ -53,7 +53,7 @@ You can now start to install your new Magento 2 site via [Web Setup Wizard](http
 
 ##### 1. Clone the project:
 ```
-git clone git@github.com:jaredchu/Magento2-Docker-Development.git [project_name]
+git clone https://github.com/jaredchu/Magento2-Docker-Development.git [project_name]
 cd [project_name]
 ```
 ##### 2. Copy your magento 2 source code into `src` folder.
@@ -122,12 +122,12 @@ Modify `.env`, replace `RESTART_CONDITION=no` with `RESTART_CONDITION=always`.
 
 ##### Run bin/magento commands:
 ```
-docker exec -i app bin/composer [parameters]
+docker exec -i app bin/magento [parameters]
 ```
 or
 ```
 docker exec -it app bash
-bin/composer [parameters]
+bin/magento [parameters]
 ```
 
 ##### Environment Variables
