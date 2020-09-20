@@ -5,11 +5,11 @@
 [![Magento2 Docker Development](https://i.imgur.com/FVPYIXms.jpg)](https://i.imgur.com/FVPYIXm.jpg)
 
 ## Why
-- Running Magento 2 project really fast on your machine.
-- Just a few steps to setup.
-- No extra step to deploy code from host to container.
+- Running Magento 2 project **really fast** on your machine.
+- Just **a few steps to setup**.
+- **No extra step to deploy code** from host to container.
 - Easy to modify PHP, MySQL, and Nginx configurations.
-- Works on Linux, macOS, and Windows.
+- Works on **Linux, macOS, and Windows**.
 
 ## Default Official Images
 * php:7.2-fpm
